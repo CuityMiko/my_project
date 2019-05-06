@@ -4,11 +4,20 @@
     element-loading-text="正在加载中..."
     element-loading-spinner="el-icon-loading">
     <el-form :inline="true" :model="formInline" style="margin-top: 30px; margin-bottom: -10px;">
-      <el-form-item label="名称">
-        <el-input v-model="formInline.name" placeholder="名称"></el-input>
+      <el-form-item label="标 签">
+        <el-select v-model="formInline.region" placeholder="请选择标签">
+          <el-option label="区域一" value="shanghai"></el-option>
+          <el-option label="区域二" value="beijing"></el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="活动区域">
-        <el-select v-model="formInline.region" placeholder="活动区域">
+      <el-form-item label="品 牌">
+        <el-select v-model="formInline.region" placeholder="请选择品牌">
+          <el-option label="区域一" value="shanghai"></el-option>
+          <el-option label="区域二" value="beijing"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="分 组">
+        <el-select v-model="formInline.region" placeholder="请选择分组">
           <el-option label="区域一" value="shanghai"></el-option>
           <el-option label="区域二" value="beijing"></el-option>
         </el-select>
@@ -31,7 +40,7 @@
         <el-col v-for="(item, index) in dataSource" :key="index" :span="3">
             <el-popover
               placement="right-start"
-              width="300"
+              width="200"
               trigger="hover">
               <div>
                 <p>满150元包邮</p>
@@ -64,6 +73,8 @@
 
 <script>
 import http from '../utils/http';
+import axios from 'axios';
+
 export default {
   name: 'Main',
   data () {
@@ -91,11 +102,20 @@ export default {
     }
   },
   mounted() { // 初始化
-    // http.post('http://47.97.252.72:8080/mrsm/tstype.do?getTypeDetail', {
-    //   typegroupid: '2c5e5c466a687b54016a6cddef1d0065'
-    // }).then(res => {
-    //   console.log(res);
-    // })
+    // axios.all([
+    //   axios.get('https://api.github.com/xxx/1'),
+    //   axios.get('https://api.github.com/xxx/2')
+    // ])
+    // .then(axios.spread(function (userResp, reposResp) {
+    //   // 上面两个请求都完成后，才执行这个回调方法
+    //   console.log('User', userResp.data);
+    //   console.log('Repositories', reposResp.data);
+    // }));
+    http.post('http://47.97.252.72:8080/mrsm/tstype.do?getTypeDetail', {
+      typegroupid: '2c5e5c466a687b54016a6cddef1d0065'
+    }).then(res => {
+      console.log(res);
+    })
     setTimeout(() => {
       this.loading = false;
     }, 3000)
