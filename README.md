@@ -1,4 +1,4 @@
-# price_ analyzer
+# price_analyzer
 
 > A Vue.js project
 
