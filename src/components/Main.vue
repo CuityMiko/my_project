@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div
+    v-loading="loading"
+    element-loading-text="正在加载中..."
+    element-loading-spinner="el-icon-loading">
     <el-form :inline="true" :model="formInline" style="margin-top: 30px; margin-bottom: -10px;">
       <el-form-item label="名称">
         <el-input v-model="formInline.name" placeholder="名称"></el-input>
@@ -65,6 +68,7 @@ export default {
   name: 'Main',
   data () {
     return {
+      loading: true,
       formInline: {
         name: '',
         region: ''
@@ -92,6 +96,9 @@ export default {
     // }).then(res => {
     //   console.log(res);
     // })
+    setTimeout(() => {
+      this.loading = false;
+    }, 3000)
   },
   methods: {
     search() { // 查询
