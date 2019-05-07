@@ -5,21 +5,33 @@
     element-loading-spinner="el-icon-loading">
     <el-form :inline="true" :model="formInline" style="margin-top: 30px; margin-bottom: -10px;">
       <el-form-item label="标 签">
-        <el-select v-model="formInline.region" placeholder="请选择标签">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+        <el-select v-model="formInline.tagName" placeholder="请选择标签">
+          <el-option
+            v-for="item in tagData"
+            :key="item.id"
+            :label="item.typename"
+            :value="item.id">
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="品 牌">
-        <el-select v-model="formInline.region" placeholder="请选择品牌">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+        <el-select v-model="formInline.brand" placeholder="请选择品牌">
+          <el-option
+            v-for="item in brandData"
+            :key="item.id"
+            :label="item.typename"
+            :value="item.id">
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="分 组">
-        <el-select v-model="formInline.region" placeholder="请选择分组">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+        <el-select v-model="formInline.groupName" placeholder="请选择分组">
+          <el-option
+            v-for="item in groupData"
+            :key="item.id"
+            :label="item.typename"
+            :value="item.id">
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -27,7 +39,7 @@
       </el-form-item>
     </el-form>
     <el-divider><i class="el-icon-search"></i></el-divider>
-    <div class="content">
+    <div class="content" v-if="dataSource.length > 0">
       <el-row>
         <el-col>
           <el-button-group class="right">
@@ -36,37 +48,71 @@
           </el-button-group>
         </el-col>
       </el-row>
-      <el-row :gutter="10">
-        <el-col v-for="(item, index) in dataSource" :key="index" :span="3">
+      <el-row :gutter="10" v-for="(ritem, index) in dataSource" :key="index">
+        <el-col :span="3">
             <el-popover
               placement="right-start"
               width="200"
               trigger="hover">
               <div>
-                <p>满150元包邮</p>
-                <p>满1000元减10元</p>
-                <p>满1999元减20元</p>
+                <p v-for="(rsales, index) in ritem.sales.substring(1, ritem.sales.length - 1).split('###')" :key="index" v-show="rsales != ''">{{rsales}}</p>
               </div>
               <el-card shadow="hover" style="margin-top: 10px;" slot="reference" :body-style="{ padding: '10px 0px 0px 0px' }">
-                <div class="item">小米官网</div>
+                <div class="item">{{ritem.name || '-'}}</div>
                 <br />
-                <div :class="['item', 'price', {'hight': index > 4, 'mid': index < 6, 'low': index > 9}]">
+                <div :class="['item', 'price', {'hight': index <= 3, 'mid': index > 4, 'low': index > 8}]">
                   <img src="../assets/tickt.png" width="30" height="30" alt="" srcset="" v-if="index < 6">
                   <img src="../assets/low.png" width="30" height="30" alt="" srcset="" v-else>
-                  <span style="margin-left: 5px;">¥10000</span>
+                  <!-- <img src="../assets/down.png" width="30" height="30" alt="" srcset=""> -->
+                  <span style="margin-left: 5px;">¥{{ritem.price || '-'}}</span>
                 </div>
                 <br />
-                <div class="item discount">优惠券数量: 3</div>
+                <div class="item discount">优惠券数量: {{ritem.salesCnt || '-'}}</div>
                 <br />
                 <div class="item flex">
-                  <el-badge :value="200" class="item" type="warning">
+                  <el-badge :value="ritem.hzSend" class="item" v-show="ritem.hzSend=='京'">
                   </el-badge>
-                  <span><i class="el-icon-time"></i>11:30</span>
+                  <el-badge :value="ritem.hzSend" class="item" type="warning" v-show="ritem.hzSend!='京'">
+                  </el-badge>
+                  <span><i class="el-icon-time"></i><span style="margin-left: 3px;">{{ritem.addTime.split(' ')[1] || '-'}}</span></span>
+                </div>
+              </el-card>
+            </el-popover>
+        </el-col>
+        <el-col v-for="(item, index) in ritem.appendList" :key="index" :span="3">
+            <el-popover
+              placement="right-start"
+              width="200"
+              trigger="hover">
+              <div>
+                <p v-for="(rsales, index) in item.sales.substring(1, item.sales.length - 1).split('###')" :key="index" v-show="rsales != ''">{{rsales}}</p>
+              </div>
+              <el-card shadow="hover" style="margin-top: 10px;" slot="reference" :body-style="{ padding: '10px 0px 0px 0px' }">
+                <div class="item">{{item.name || '-'}}</div>
+                <br />
+                <div :class="['item', 'price', {'hight': index <= 3, 'mid': index > 4, 'low': index > 8}]">
+                  <img src="../assets/tickt.png" width="30" height="30" alt="" srcset="" v-if="index < 6">
+                  <img src="../assets/low.png" width="30" height="30" alt="" srcset="" v-else>
+                  <!-- <img src="../assets/down.png" width="30" height="30" alt="" srcset=""> -->
+                  <span style="margin-left: 5px;">¥{{item.price}}</span>
+                </div>
+                <br />
+                <div class="item discount">优惠券数量: {{item.salesCnt}}</div>
+                <br />
+                <div class="item flex">
+                  <el-badge :value="item.hzSend" class="item" v-show="item.hzSend=='京'">
+                  </el-badge>
+                  <el-badge :value="item.hzSend" class="item" type="warning" v-show="item.hzSend!='京'">
+                  </el-badge>
+                  <span><i class="el-icon-time"></i><span style="margin-left: 3px;">{{item.addTime.split(' ')[1] || '-'}}</span></span>
                 </div>
               </el-card>
             </el-popover>
         </el-col>
       </el-row>
+    </div>
+    <div v-else>
+      <el-divider content-position="center">暂无数据</el-divider>
     </div>
   </div>
 </template>
@@ -80,55 +126,112 @@ export default {
   data () {
     return {
       loading: true,
+      tagData: [], // 标签数据源
+      groupData: [], // 分组数据源
+      brandData: [], // 品牌数据源
       formInline: {
-        name: '',
-        region: ''
+        tagName: '', // 标签
+        groupName: '', // 分组
+        brand: '' // 品牌
       },
       dataSource: [
-        {id: 1, name: 'zhangsan1'},
-        {id: 2, name: 'zhangsan2'},
-        {id: 3, name: 'zhangsan3'},
-        {id: 4, name: 'zhangsan4'},
-        {id: 5, name: 'zhangsan5'},
-        {id: 6, name: 'zhangsan6'},
-        {id: 7, name: 'zhangsan7'},
-        {id: 8, name: 'zhangsan8'},
-        {id: 9, name: 'zhangsan9'},
-        {id: 10, name: 'zhangsan10'},
-        {id: 11, name: 'zhangsan11'}
       ],
       sortBytimeUp: true, // 按时间排序升序
       sortBypriceUp: false // 按价格排序升序
     }
   },
   mounted() { // 初始化
-    // axios.all([
-    //   axios.get('https://api.github.com/xxx/1'),
-    //   axios.get('https://api.github.com/xxx/2')
-    // ])
-    // .then(axios.spread(function (userResp, reposResp) {
-    //   // 上面两个请求都完成后，才执行这个回调方法
-    //   console.log('User', userResp.data);
-    //   console.log('Repositories', reposResp.data);
-    // }));
-    http.post('http://47.97.252.72:8080/mrsm/tstype.do?getTypeDetail', {
-      typegroupid: '2c5e5c466a687b54016a6cddef1d0065'
-    }).then(res => {
-      console.log(res);
-    })
-    setTimeout(() => {
-      this.loading = false;
-    }, 3000)
+    var _self = this;
+    _self.loadData();
+    setInterval(() => {
+      _self.loadData();
+    }, 1000 * 60 * 5)
   },
   methods: {
+    loadData() { // 加载数据
+      var _self = this;
+      axios.all([
+        http({
+          url: '/api/mrsm/tstype.do?getTypeDetail',
+          method: 'post',
+          params: {
+            typegroupid: '2c5e5c466a687b54016a6cddef1d0065' // 标签
+          }
+        }),
+        http({
+          url: '/api/mrsm/tstype.do?getTypeDetail',
+          method: 'post',
+          params: {
+            typegroupid: '2c5e5c466a687b54016a6cddadcc0063' // 品牌
+          }
+        }),
+        http({
+          url: '/api/mrsm/tstype.do?getTypeDetail',
+          method: 'post',
+          params: {
+            typegroupid: '2c5e5c46696fa52e01696fb1a7990019' // 分组
+          }
+        }),
+        _self.getList() // 获取数据源
+      ]).then(axios.spread(function (tag, brand, group, list) {
+        if (tag.data.ok) {
+          _self.tagData = tag.data.data;
+        }
+        if (brand.data.ok) {
+          _self.brandData = brand.data.data;
+        }
+        if (group.data.ok) {
+          _self.groupData = group.data.data;
+        }
+        if (list.data.ok) {
+          _self.dataSource = list.data.data;
+        }
+        _self.loading = false;
+      }));
+    },
     search() { // 查询
-      console.log('search');
+      var _self = this;
+      _self.getList().then(list => {
+        if (list.data.ok) {
+          _self.dataSource = list.data.data;
+        } else {
+          _self.dataSource = [];
+        }
+      });
     },
     sortBytime() { // 按时间排序
       this.sortBytimeUp = !this.sortBytimeUp;
+      if (dataSource.length > 0 && dataSource.appendList.length > 0) {
+        let dataSource = JSON.parse(JSON.stringify(this.dataSource));
+        if (this.sortBytimeUp) { // 升序
+          this.dataSource = dataSource.appendList.sort((x, y) => x.addTime - y.addTime);
+        } else { // 降序
+            this.dataSource.appendList = dataSource.appendList.sort((x, y) => y.addTime - x.addTime);
+        }
+      }
     },
     sortByprice() { // 按价格排序
       this.sortBypriceUp = !this.sortBypriceUp;
+      if (dataSource.length > 0 && dataSource.appendList.length > 0) {
+        let dataSource = JSON.parse(JSON.stringify(this.dataSource));
+        if (this.sortBypriceUp) { // 升序
+          this.dataSource = dataSource.appendList.sort((x, y) => x.price - y.price);
+        } else { // 降序
+            this.dataSource.appendList = dataSource.appendList.sort((x, y) => y.price - x.price);
+        }
+      }
+    },
+    getList() { // 获取数据源
+      var _self = this;
+      return http({
+        url: '/api/mrsm/jdptResultController.do?resultList',
+        method: 'post',
+        params: {
+          groupName: _self.formInline.groupName, // 分组
+          tagName: _self.formInline.tagName, // 分组
+          brand: _self.formInline.brand // 分组
+        }
+      })
     }
   }
 }
@@ -149,12 +252,12 @@ export default {
     margin-top: 5px;
     height: 45px; */
     font-size: 14px;
-    line-height: 15px;
+    line-height: 17px;
   }
   .flex {
     display: flex;
     flex-direction: row;
-    justify-content:space-between;
+    justify-content: space-between;
     margin-left: -1px;
     margin-right: 15px;
   }
