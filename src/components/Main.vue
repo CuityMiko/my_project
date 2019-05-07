@@ -99,7 +99,7 @@
                 <p v-for="(rsales, index) in item.sales.split(',')" :key="index" v-show="rsales != ''">{{rsales}}</p>
               </div>
               <el-card shadow="hover" style="margin-top: 10px; cursor: pointer;" slot="reference" :body-style="{ padding: '10px 0px 0px 0px' }">
-                <div class="item">{{item.name.substr(0, 25).concat('...') || '-'}}</div>
+                <div class="item">{{item.shopName.substr(0, 25).concat('...') || '-'}}</div>
                 <br />
                 <div :class="['item', 'price', {'hight': item.color == 'red', 'mid': item.color == 'green', 'low': item.color == 'yellow', 'down': item.color == 'gray'}]">
                   <img src="../assets/up.png" width="30" height="30" alt="" srcset="" v-show="item.color == 'red'">
