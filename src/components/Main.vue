@@ -38,7 +38,7 @@
         <el-button type="primary" @click="search">查 询</el-button>
       </el-form-item>
     </el-form>
-    <el-divider><i class="el-icon-search"></i></el-divider>
+    <el-divider><i class="el-icon-tickets"></i></el-divider>
     <div class="content" v-if="dataSource.length > 0">
       <el-row>
         <el-col>
@@ -57,25 +57,36 @@
               <div>
                 <p v-for="(rsales, index) in ritem.sales.split(',')" :key="index" v-show="rsales != ''">{{rsales}}</p>
               </div>
-              <el-card shadow="hover" style="margin-top: 10px;" slot="reference" :body-style="{ padding: '10px 0px 0px 0px' }">
-                <div class="item">{{ritem.name || '-'}}</div>
+              <el-card shadow="hover" style="margin-top: 10px; cursor: pointer;" slot="reference" :body-style="{ padding: '10px 0px 0px 0px' }">
+                <div class="item">{{ritem.name.substr(0, 25).concat('...') || '-'}}</div>
                 <br />
-                <div :class="['item', 'price', {'hight': index <= 3, 'mid': index > 4, 'low': index > 8}]">
-                  <img src="../assets/tickt.png" width="30" height="30" alt="" srcset="" v-if="index < 6">
-                  <img src="../assets/low.png" width="30" height="30" alt="" srcset="" v-else>
-                  <!-- <img src="../assets/down.png" width="30" height="30" alt="" srcset=""> -->
+                <div :class="['item', 'price', {'hight': ritem.color == 'red', 'mid': ritem.color == 'green', 'low': ritem.color == 'yellow', 'down': ritem.color == 'gray'}]">
+                  <img src="../assets/up.png" width="30" height="30" alt="" srcset="" v-show="ritem.color == 'red'">
+                  <img src="../assets/low.png" width="30" height="30" alt="" srcset="" v-show="ritem.color == 'yellow'">
+                  <img src="../assets/down.png" width="30" height="30" alt="" srcset="" v-show="ritem.color == 'green'">
+                  <img src="../assets/shixiao.png" width="30" height="30" alt="" srcset="" v-show="ritem.color == 'gray'">
                   <span style="margin-left: 5px;">¥{{ritem.price || '-'}}</span>
                 </div>
                 <br />
                 <div class="item discount">优惠券数量: {{ritem.salesCnt || '-'}}</div>
-                <br />
-                <div class="item flex">
-                  <el-badge :value="ritem.hzSend" class="item" v-show="ritem.hzSend=='京'">
-                  </el-badge>
-                  <el-badge :value="ritem.hzSend" class="item" type="warning" v-show="ritem.hzSend!='京'">
-                  </el-badge>
-                  <span><i class="el-icon-time"></i><span style="margin-left: 3px;">{{ritem.addTime.split(' ')[1] || '-'}}</span></span>
-                </div>
+                <el-divider></el-divider>
+                <el-row type="flex" justify="space-between">
+                  <el-col :span="8">
+                    <div class="jing" v-if="ritem.hzSend=='京'">{{ritem.hzSend}}</div>
+                    <div class="shang" v-else>{{ritem.hzSend}}</div>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-tooltip class="item" effect="dark" content="点击查看详情" placement="bottom">
+                      <i class="el-icon-view" style="cursor: pointer;" @click.stop="seeDetail(ritem)"></i>
+                    </el-tooltip>
+                  </el-col>
+                  <el-col :span="8">
+                    <span>
+                      <i class="el-icon-time"></i>
+                      <span style="font-size: 10px;">{{ritem.addTime.split(' ')[1].split(':')[0] + ':' + ritem.addTime.split(' ')[1].split(':')[1] || '-'}}</span>
+                    </span>
+                  </el-col>
+                </el-row>
               </el-card>
             </el-popover>
         </el-col>
@@ -87,25 +98,36 @@
               <div>
                 <p v-for="(rsales, index) in item.sales.split(',')" :key="index" v-show="rsales != ''">{{rsales}}</p>
               </div>
-              <el-card shadow="hover" style="margin-top: 10px;" slot="reference" :body-style="{ padding: '10px 0px 0px 0px' }">
-                <div class="item">{{item.name || '-'}}</div>
+              <el-card shadow="hover" style="margin-top: 10px; cursor: pointer;" slot="reference" :body-style="{ padding: '10px 0px 0px 0px' }">
+                <div class="item">{{item.name.substr(0, 25).concat('...') || '-'}}</div>
                 <br />
-                <div :class="['item', 'price', {'hight': index <= 3, 'mid': index > 4, 'low': index > 8}]">
-                  <img src="../assets/tickt.png" width="30" height="30" alt="" srcset="" v-if="index < 6">
-                  <img src="../assets/low.png" width="30" height="30" alt="" srcset="" v-else>
-                  <!-- <img src="../assets/down.png" width="30" height="30" alt="" srcset=""> -->
-                  <span style="margin-left: 5px;">¥{{item.price}}</span>
+                <div :class="['item', 'price', {'hight': item.color == 'red', 'mid': item.color == 'green', 'low': item.color == 'yellow', 'down': item.color == 'gray'}]">
+                  <img src="../assets/up.png" width="30" height="30" alt="" srcset="" v-show="item.color == 'red'">
+                  <img src="../assets/low.png" width="30" height="30" alt="" srcset="" v-show="item.color == 'yellow'">
+                  <img src="../assets/down.png" width="30" height="30" alt="" srcset="" v-show="item.color == 'green'">
+                  <img src="../assets/shixiao.png" width="30" height="30" alt="" srcset="" v-show="item.color == 'gray'">
+                  <span style="margin-left: 5px;">¥{{item.price || '-'}}</span>
                 </div>
                 <br />
                 <div class="item discount">优惠券数量: {{item.salesCnt}}</div>
-                <br />
-                <div class="item flex">
-                  <el-badge :value="item.hzSend" class="item" v-show="item.hzSend=='京'">
-                  </el-badge>
-                  <el-badge :value="item.hzSend" class="item" type="warning" v-show="item.hzSend!='京'">
-                  </el-badge>
-                  <span><i class="el-icon-time"></i><span style="margin-left: 3px;">{{item.addTime.split(' ')[1] || '-'}}</span></span>
-                </div>
+                <el-divider></el-divider>
+                <el-row type="flex" justify="space-between">
+                  <el-col :span="8">
+                    <div class="jing" v-if="item.hzSend=='京'">{{item.hzSend}}</div>
+                    <div class="shang" v-else>{{item.hzSend}}</div>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-tooltip class="item" effect="dark" content="点击查看详情" placement="bottom">
+                      <i class="el-icon-view" style="cursor: pointer;" @click.stop="seeDetail(item)"></i>
+                    </el-tooltip>
+                  </el-col>
+                  <el-col :span="8">
+                    <span>
+                      <i class="el-icon-time"></i>
+                      <span style="font-size: 10px;">{{item.addTime.split(' ')[1].split(':')[0] + ':' + item.addTime.split(' ')[1].split(':')[1] || '-'}}</span>
+                    </span>
+                  </el-col>
+                </el-row>
               </el-card>
             </el-popover>
         </el-col>
@@ -115,12 +137,32 @@
       <el-divider content-position="center">暂无数据</el-divider>
     </div>
     <!-- 详情弹窗 -->
-    <el-dialog title="详细信息" :visible.sync="showdialog">
-      <el-form label-position="right">
-        <el-form-item label="活动名称">
-          <span>活动名称</span>
-        </el-form-item>
-      </el-form>
+    <el-dialog :title="detail ? detail.title : '-'" :visible.sync="showdialog" width="30%">
+      <div style="display: flex; flex-direction: column; align-items: self-start;" v-show="detail">
+        <span class="detail">名称: {{detail ? detail.title : '-'}}</span>
+        <span class="detail">店铺名称: {{detail ? detail.shopName : '-'}}</span>
+        <span class="detail">价格: {{detail ? detail.price : '-'}}</span>
+        <span class="detail">商品地址: {{detail ? detail.url : '-'}}</span>
+        <span class="detail">优惠券: {{detail ? detail.sales : '-'}}</span>
+        <span class="detail">优惠券个数: {{detail ? detail.salesCnt : '-'}}</span>
+        <span class="detail">上海是否有货: {{detail ? detail.shStore == 1 ? '有' : '无' : '-'}}</span>
+        <span class="detail">北京是否有货: {{detail ? detail.bjStore == 1 ? '有' : '无' : '-'}}</span>
+        <span class="detail">广州是否有货: {{detail ? detail.gzStore == 1 ? '有' : '无' : '-'}}</span>
+        <span class="detail">杭州是否有货: {{detail ? detail.hzStore == 1 ? '有' : '无' : '-'}}</span>
+        <span class="detail">评价总数: {{detail ? detail.commentCnt : '-'}}</span>
+        <span class="detail">差评数量: {{detail ? detail.commentBadCnt : '-'}}</span>
+        <span class="detail">图片评价数量: {{detail ? detail.commentPicCnt : '-'}}</span>
+        <span class="detail">视频评价数量: {{detail ? detail.commentVideoCnt : '-'}}</span>
+        <span class="detail">追加评价数量: {{detail ? detail.commentAppendCnt : '-'}}</span>
+        <span class="detail">好评数量: {{detail ? detail.commentGoodCnt : '-'}}</span>
+        <span class="detail">中评数量: {{detail ? detail.commentMiddleCnt : '-'}}</span>
+        <span class="detail">上海发货单位: {{detail ? detail.shSend : '-'}}</span>
+        <span class="detail">北京发货单位: {{detail ? detail.bjSend : '-'}}</span>
+        <span class="detail">广州发货单位: {{detail ? detail.gzSend : '-'}}</span>
+        <span class="detail">杭州发货单位: {{detail ? detail.hzSend : '-'}}</span>
+        <span class="detail">数据日期: {{detail ? detail.dataDay : '-'}}</span>
+        <span class="detail">数据时间: {{detail ? detail.updateTime : '-'}}</span>
+      </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="showdialog = false">关 闭</el-button>
       </div>
@@ -262,6 +304,9 @@ export default {
       if (url) {
         window.open(url, "_blank");
       }
+    },
+    seeDetail(item) { // 查看详情
+      this.detail = JSON.parse(JSON.stringify(item));
       this.showdialog = true;
     }
   }
@@ -269,6 +314,36 @@ export default {
 </script>
 
 <style scoped>
+  .jing {
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+    line-height: 12px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    color: white;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(211, 12, 12);
+    border-radius: 35%;
+  }
+  .shang {
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+    line-height: 12px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    color: white;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: orange;
+    border-radius: 35%;
+  }
   .right {
     float: right;
   }
@@ -278,17 +353,22 @@ export default {
   }
   .item {
     display: flex;
-    margin-left: 15px;
-    /* margin-bottom: -27px;
-    margin-top: 5px;
-    height: 45px; */
+    margin-left: 10px;
     font-size: 14px;
     line-height: 17px;
+  }
+  .detail {
+    display: flex;
+    margin-left: 15px;
+    font-size: 14px;
+    line-height: 17px;
+    margin-bottom: 6px;
+    font-weight: 500;
   }
   .flex {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     margin-left: -1px;
     margin-right: 15px;
   }
@@ -313,5 +393,11 @@ export default {
   }
   .low {
     color: orange;
+  }
+  .down {
+    color: #8a8a8a;
+  }
+  .el-divider--horizontal {
+    margin: 10px 0;
   }
 </style>
