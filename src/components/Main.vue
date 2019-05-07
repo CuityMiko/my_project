@@ -49,13 +49,13 @@
         </el-col>
       </el-row>
       <el-row :gutter="10" v-for="(ritem, index) in dataSource" :key="index">
-        <el-col :span="3">
+        <el-col :span="3" @click.native="goLink(ritem.url)">
             <el-popover
               placement="right-start"
               width="200"
               trigger="hover">
               <div>
-                <p v-for="(rsales, index) in ritem.sales.substring(1, ritem.sales.length - 1).split('###')" :key="index" v-show="rsales != ''">{{rsales}}</p>
+                <p v-for="(rsales, index) in ritem.sales.split(',')" :key="index" v-show="rsales != ''">{{rsales}}</p>
               </div>
               <el-card shadow="hover" style="margin-top: 10px;" slot="reference" :body-style="{ padding: '10px 0px 0px 0px' }">
                 <div class="item">{{ritem.name || '-'}}</div>
@@ -79,13 +79,13 @@
               </el-card>
             </el-popover>
         </el-col>
-        <el-col v-for="(item, index) in ritem.appendList" :key="index" :span="3">
+        <el-col v-for="(item, index) in ritem.appendList" :key="index" :span="3" @click.native="goLink(item.url)">
             <el-popover
               placement="right-start"
               width="200"
               trigger="hover">
               <div>
-                <p v-for="(rsales, index) in item.sales.substring(1, item.sales.length - 1).split('###')" :key="index" v-show="rsales != ''">{{rsales}}</p>
+                <p v-for="(rsales, index) in item.sales.split(',')" :key="index" v-show="rsales != ''">{{rsales}}</p>
               </div>
               <el-card shadow="hover" style="margin-top: 10px;" slot="reference" :body-style="{ padding: '10px 0px 0px 0px' }">
                 <div class="item">{{item.name || '-'}}</div>
@@ -114,6 +114,17 @@
     <div v-else>
       <el-divider content-position="center">暂无数据</el-divider>
     </div>
+    <!-- 详情弹窗 -->
+    <el-dialog title="详细信息" :visible.sync="showdialog">
+      <el-form label-position="right">
+        <el-form-item label="活动名称">
+          <span>活动名称</span>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="showdialog = false">关 闭</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -134,10 +145,12 @@ export default {
         groupName: '', // 分组
         brand: '' // 品牌
       },
+      detail: null,
       dataSource: [
       ],
       sortBytimeUp: true, // 按时间排序升序
-      sortBypriceUp: false // 按价格排序升序
+      sortBypriceUp: false, // 按价格排序升序
+      showdialog: false, // 显示详情弹窗
     }
   },
   mounted() { // 初始化
@@ -244,6 +257,12 @@ export default {
           brand: _self.formInline.brand // 分组
         }
       })
+    },
+    goLink(url) { // 点击跳转
+      if (url) {
+        window.open(url, "_blank");
+      }
+      this.showdialog = true;
     }
   }
 }
