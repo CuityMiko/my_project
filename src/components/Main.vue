@@ -201,23 +201,35 @@ export default {
     },
     sortBytime() { // 按时间排序
       this.sortBytimeUp = !this.sortBytimeUp;
-      if (dataSource.length > 0 && dataSource.appendList.length > 0) {
-        let dataSource = JSON.parse(JSON.stringify(this.dataSource));
+      let dataSource = JSON.parse(JSON.stringify(this.dataSource));
+      if (dataSource.length > 0) {
         if (this.sortBytimeUp) { // 升序
-          this.dataSource = dataSource.appendList.sort((x, y) => x.addTime - y.addTime);
+          dataSource.map(r => ({
+            appendList: r.appendList.sort((x, y) => new Date(x.addTime).getTime() - new Date(y.addTime).getTime())
+          }))
+          this.dataSource = dataSource;
         } else { // 降序
-            this.dataSource.appendList = dataSource.appendList.sort((x, y) => y.addTime - x.addTime);
+          dataSource.map(r => ({
+            appendList: r.appendList.sort((x, y) => new Date(y.addTime).getTime() - new Date(x.addTime).getTime())
+          }))
+          this.dataSource = dataSource;
         }
       }
     },
     sortByprice() { // 按价格排序
       this.sortBypriceUp = !this.sortBypriceUp;
-      if (dataSource.length > 0 && dataSource.appendList.length > 0) {
-        let dataSource = JSON.parse(JSON.stringify(this.dataSource));
+      let dataSource = JSON.parse(JSON.stringify(this.dataSource));
+      if (dataSource.length > 0) {
         if (this.sortBypriceUp) { // 升序
-          this.dataSource = dataSource.appendList.sort((x, y) => x.price - y.price);
+          dataSource.map(r => ({
+            appendList: r.appendList.sort((x, y) => x.price - y.price)
+          }))
+          this.dataSource = dataSource;
         } else { // 降序
-            this.dataSource.appendList = dataSource.appendList.sort((x, y) => y.price - x.price);
+          dataSource.map(r => ({
+            appendList: r.appendList.sort((x, y) => y.price - x.price)
+          }))
+          this.dataSource = dataSource;
         }
       }
     },
