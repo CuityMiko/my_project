@@ -133,7 +133,7 @@
         </el-col>
       </el-row>
     </div>
-    <div v-else>
+    <div style="margin-top: 30px;" v-else>
       <el-divider content-position="center">暂无数据</el-divider>
     </div>
     <!-- 详情弹窗 -->
