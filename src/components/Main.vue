@@ -10,7 +10,7 @@
             v-for="item in tagData"
             :key="item.id"
             :label="item.typename"
-            :value="item.id">
+            :value="item.typecode">
           </el-option>
         </el-select>
       </el-form-item>
@@ -20,7 +20,7 @@
             v-for="item in brandData"
             :key="item.id"
             :label="item.typename"
-            :value="item.id">
+            :value="item.typecode">
           </el-option>
         </el-select>
       </el-form-item>
@@ -30,7 +30,7 @@
             v-for="item in groupData"
             :key="item.id"
             :label="item.typename"
-            :value="item.id">
+            :value="item.typecode">
           </el-option>
         </el-select>
       </el-form-item>
@@ -230,12 +230,18 @@ export default {
         _self.getList() // 获取数据源
       ]).then(axios.spread(function (tag, brand, group, list) {
         if (tag.data.ok) {
+          let _tagData = tag.data.data;
+          _tagData.unshift({id: '', typecode: '', typename: '全部'});
           _self.tagData = tag.data.data;
         }
         if (brand.data.ok) {
+          let _brandData = brand.data.data;
+          _brandData.unshift({id: '', typecode: '', typename: '全部'});
           _self.brandData = brand.data.data;
         }
         if (group.data.ok) {
+          let _groupData = group.data.data;
+          _groupData.unshift({id: '', typecode: '', typename: '全部'});
           _self.groupData = group.data.data;
         }
         if (list.data.ok) {
