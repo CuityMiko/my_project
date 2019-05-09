@@ -207,21 +207,21 @@ export default {
       var _self = this;
       axios.all([
         http({
-          url: '/mrsm/tstype.do?getTypeDetail',
+          url: '/api/mrsm/tstype.do?getTypeDetail',
           method: 'post',
           params: {
             typegroupid: '2c5e5c466a687b54016a6cddef1d0065' // 标签
           }
         }),
         http({
-          url: '/mrsm/tstype.do?getTypeDetail',
+          url: '/api/mrsm/tstype.do?getTypeDetail',
           method: 'post',
           params: {
             typegroupid: '2c5e5c466a687b54016a6cddadcc0063' // 品牌
           }
         }),
         http({
-          url: '/mrsm/tstype.do?getTypeDetail',
+          url: '/api/mrsm/tstype.do?getTypeDetail',
           method: 'post',
           params: {
             typegroupid: '2c5e5c46696fa52e01696fb1a7990019' // 分组
@@ -297,7 +297,7 @@ export default {
     getList() { // 获取数据源
       var _self = this;
       return http({
-        url: '/mrsm/jdptResultController.do?resultList',
+        url: '/api/mrsm/jdptResultController.do?resultList',
         method: 'post',
         params: {
           groupName: _self.formInline.groupName, // 分组
