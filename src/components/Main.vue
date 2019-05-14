@@ -83,7 +83,7 @@
                   <el-col :span="8">
                     <span>
                       <i class="el-icon-time"></i>
-                      <span style="font-size: 10px;">{{ritem.addTime.split(' ')[1].split(':')[0] + ':' + ritem.addTime.split(' ')[1].split(':')[1] || '-'}}</span>
+                      <span style="font-size: 10px;">{{ritem.updateTime.split(' ')[1].split(':')[0] + ':' + ritem.updateTime.split(' ')[1].split(':')[1] || '-'}}</span>
                     </span>
                   </el-col>
                 </el-row>
@@ -124,7 +124,7 @@
                   <el-col :span="8">
                     <span>
                       <i class="el-icon-time"></i>
-                      <span style="font-size: 10px;">{{item.addTime.split(' ')[1].split(':')[0] + ':' + item.addTime.split(' ')[1].split(':')[1] || '-'}}</span>
+                      <span style="font-size: 10px;">{{item.updateTime.split(' ')[1].split(':')[0] + ':' + item.updateTime.split(' ')[1].split(':')[1] || '-'}}</span>
                     </span>
                   </el-col>
                 </el-row>
@@ -266,12 +266,12 @@ export default {
       if (dataSource.length > 0) {
         if (this.sortBytimeUp) { // 升序
           dataSource.map(r => ({
-            appendList: r.appendList.sort((x, y) => new Date(x.addTime).getTime() - new Date(y.addTime).getTime())
+            appendList: r.appendList.sort((x, y) => new Date(x.updateTime).getTime() - new Date(y.updateTime).getTime())
           }))
           this.dataSource = dataSource;
         } else { // 降序
           dataSource.map(r => ({
-            appendList: r.appendList.sort((x, y) => new Date(y.addTime).getTime() - new Date(x.addTime).getTime())
+            appendList: r.appendList.sort((x, y) => new Date(y.updateTime).getTime() - new Date(x.updateTime).getTime())
           }))
           this.dataSource = dataSource;
         }
