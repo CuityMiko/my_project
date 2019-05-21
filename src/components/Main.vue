@@ -4,6 +4,9 @@
     element-loading-text="正在加载中..."
     element-loading-spinner="el-icon-loading">
     <el-form :inline="true" :model="formInline" style="margin-top: 30px; margin-bottom: -10px;">
+      <el-form-item label="商品名称">
+        <el-input v-model="formInline.goodsName" placeholder="请输入商品名称" maxlength="50"></el-input>
+      </el-form-item>
       <el-form-item label="标 签">
         <el-select v-model="formInline.tagName" placeholder="请选择标签">
           <el-option
@@ -68,7 +71,7 @@
                   <span style="margin-left: 5px;">¥{{ritem.price || '-'}}</span>
                 </div>
                 <br />
-                <div class="item discount">优惠券数量: {{ritem.salesCnt || '-'}}</div>
+                <div class="item discount">券: {{ritem.salesCnt || '-'}}</div>
                 <el-divider></el-divider>
                 <el-row type="flex" justify="space-between">
                   <el-col :span="8">
@@ -109,7 +112,7 @@
                   <span style="margin-left: 5px;">¥{{item.price || '-'}}</span>
                 </div>
                 <br />
-                <div class="item discount">优惠券数量: {{item.salesCnt}}</div>
+                <div class="item discount">券: {{item.salesCnt}}</div>
                 <el-divider></el-divider>
                 <el-row type="flex" justify="space-between">
                   <el-col :span="8">
@@ -145,10 +148,8 @@
         <span class="detail">商品地址: {{detail ? detail.url : '-'}}</span>
         <span class="detail">优惠券: {{detail ? detail.sales : '-'}}</span>
         <span class="detail">优惠券个数: {{detail ? detail.salesCnt : '-'}}</span>
-        <span class="detail">上海是否有货: {{detail ? detail.shStore == 1 ? '有' : '无' : '-'}}</span>
-        <span class="detail">北京是否有货: {{detail ? detail.bjStore == 1 ? '有' : '无' : '-'}}</span>
-        <span class="detail">广州是否有货: {{detail ? detail.gzStore == 1 ? '有' : '无' : '-'}}</span>
-        <span class="detail">杭州是否有货: {{detail ? detail.hzStore == 1 ? '有' : '无' : '-'}}</span>
+        <span class="detail">上海/北京/广州/杭州是否有货: {{detail ? detail.hzStore == 1 ? '有' : '无' : '-'}}</span>
+        <span class="detail">上海/北京/广州/杭州发货单位: {{detail ? detail.hzSend : '-'}}</span>
         <span class="detail">评价总数: {{detail ? detail.commentCnt : '-'}}</span>
         <span class="detail">差评数量: {{detail ? detail.commentBadCnt : '-'}}</span>
         <span class="detail">图片评价数量: {{detail ? detail.commentPicCnt : '-'}}</span>
@@ -156,10 +157,6 @@
         <span class="detail">追加评价数量: {{detail ? detail.commentAppendCnt : '-'}}</span>
         <span class="detail">好评数量: {{detail ? detail.commentGoodCnt : '-'}}</span>
         <span class="detail">中评数量: {{detail ? detail.commentMiddleCnt : '-'}}</span>
-        <span class="detail">上海发货单位: {{detail ? detail.shSend : '-'}}</span>
-        <span class="detail">北京发货单位: {{detail ? detail.bjSend : '-'}}</span>
-        <span class="detail">广州发货单位: {{detail ? detail.gzSend : '-'}}</span>
-        <span class="detail">杭州发货单位: {{detail ? detail.hzSend : '-'}}</span>
         <span class="detail">数据日期: {{detail ? detail.dataDay : '-'}}</span>
         <span class="detail">数据时间: {{detail ? detail.updateTime : '-'}}</span>
       </div>
@@ -183,6 +180,7 @@ export default {
       groupData: [], // 分组数据源
       brandData: [], // 品牌数据源
       formInline: {
+        goodsName: '', // 商品名称
         tagName: '', // 标签
         groupName: '', // 分组
         brand: '' // 品牌
@@ -300,6 +298,7 @@ export default {
         url: '/api/mrsm/jdptResultController.do?resultList',
         method: 'post',
         params: {
+          name: _self.formInline.goodsName, // 商品名称
           groupName: _self.formInline.groupName, // 分组
           tagName: _self.formInline.tagName, // 分组
           brand: _self.formInline.brand // 分组
